@@ -1,0 +1,29 @@
+{
+  "name": "netsuite-examples",
+  "version": "1.0.0",
+  "description": "NetSuite examples.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/volneiferreira/netsuite-examples.git"
+  },
+  "author": "Volnei Ferreira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/volneiferreira/netsuite-examples/issues"
+  },
+  "homepage": "https://github.com/volneiferreira/netsuite-examples#readme",
+  "devDependencies": {
+    "standard": "^14.0.2"
+  },
+  "standard": {
+    "globals": [
+      "define",
+      "require",
+      "log"
+    ]
+  }
+}
