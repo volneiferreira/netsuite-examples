@@ -38,14 +38,16 @@ define([],
           action: _buildStep03Page
         },
         finish: {
-          action: _buildFinishPage
+          action: _executeFinishAction
         },
         cancel: {
-          action: _buildCancelPage
+          action: _executeCancelAction
         }
       }
 
-      _setStep(context.request, assistant, steps)
+      const stepInfo = _setStep(context.request, assistant, steps)
+
+      if (!stepInfo.toContinue) return
 
       context.response.writePage({
         pageObject: assistant
@@ -86,25 +88,25 @@ define([],
     }
 
     /**
-     * Build Finish page.
+     * Execute Finish action.
      *
      * @param serverRequest
      * @param assistant
      * @private
      */
-    function _buildFinishPage (serverRequest, assistant) {
-      // Add elements into assistant object.
+    function _executeFinishAction (serverRequest, assistant) {
+      // Finish action.
     }
 
     /**
-     * Build Cancel page.
+     * Execute Cancel action.
      *
      * @param serverRequest
      * @param assistant
      * @private
      */
-    function _buildCancelPage (serverRequest, assistant) {
-      // Add elements into assistant object.
+    function _executeCancelAction (serverRequest, assistant) {
+      // Cancel action.
     }
 
     /**
@@ -113,9 +115,13 @@ define([],
      * @param serverRequest
      * @param assistant
      * @param steps
+     * @returns {object}
      * @private
      */
     function _setStep (serverRequest, assistant, steps) {
+      const stepInfo = {
+        toContinue: true
+      }
       if (serverRequest.method === 'GET') {
         const firstStep = steps[1]
         firstStep.action(serverRequest, assistant)
@@ -124,13 +130,16 @@ define([],
         const lastAction = assistant.getLastAction()
         if (lastAction === serverWidget.AssistantSubmitAction.FINISH) {
           steps.finish.action(serverRequest, assistant)
+          stepInfo.toContinue = false
         } else if (lastAction === serverWidget.AssistantSubmitAction.CANCEL) {
           steps.cancel.action(serverRequest, assistant)
+          stepInfo.toContinue = false
         } else {
           assistant.currentStep = assistant.getNextStep()
           steps[assistant.currentStep.stepNumber].action(serverRequest, assistant, data)
         }
       }
+      return stepInfo
     }
 
     return {
